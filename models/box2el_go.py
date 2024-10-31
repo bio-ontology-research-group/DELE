@@ -30,7 +30,6 @@ class BoxSquaredELModule(ELModule):
         delta=2,
         epsilon=0.001,
         reg_factor=0.05,
-        test_gci="gci2",
     ):
         super().__init__()
         self.nb_ont_classes = nb_ont_classes
@@ -40,7 +39,6 @@ class BoxSquaredELModule(ELModule):
         self.epsilon = epsilon
         self.reg_factor = reg_factor
         self.embed_dim = embed_dim
-        self.test_gci = test_gci
 
         self.class_center = self.init_embeddings(nb_ont_classes, embed_dim)
         self.class_offset = self.init_embeddings(self.nb_ont_classes, embed_dim)
@@ -144,31 +142,20 @@ class BoxSquaredELModule(ELModule):
         return reg_loss(self.bump, self.reg_factor)
 
     def eval_method(self, data):
-        if self.test_gci == "gci0":
-            return gci0_loss(
-                data,
-                self.class_center,
-                self.class_offset,
-                self.gamma,
-                self.embed_dim,
-                self.epsilon,
-                neg=False,
-            )
-        elif self.test_gci == "gci2":
-            return gci2_loss(
-                data,
-                self.class_center,
-                self.class_offset,
-                self.head_center,
-                self.head_offset,
-                self.tail_center,
-                self.tail_offset,
-                self.bump,
-                self.gamma,
-                self.delta,
-                self.embed_dim,
-                neg=False,
-            )
+        return gci2_loss(
+            data,
+            self.class_center,
+            self.class_offset,
+            self.head_center,
+            self.head_offset,
+            self.tail_center,
+            self.tail_offset,
+            self.bump,
+            self.gamma,
+            self.delta,
+            self.embed_dim,
+            neg=False,
+        )
 
 
 class BoxSquaredEL(EmbeddingELModel):
@@ -185,7 +172,6 @@ class BoxSquaredEL(EmbeddingELModel):
         batch_size=4096 * 8,
         model_filepath=None,
         device="cpu",
-        test_gci="gci2",
         eval_property=None,
         path_to_dc=None,
         path_to_test=None,
@@ -203,7 +189,6 @@ class BoxSquaredEL(EmbeddingELModel):
         self.batch_size = batch_size
         self.epochs = epochs
         self.device = device
-        self.test_gci = test_gci
         self.eval_property = eval_property
         if path_to_dc is not None:
             self.dc = PathDataset(path_to_dc).ontology
@@ -227,7 +212,6 @@ class BoxSquaredEL(EmbeddingELModel):
             delta=self.delta,
             epsilon=self.epsilon,
             reg_factor=self.reg_factor,
-            test_gci=self.test_gci,
         ).to(self.device)
         self.eval_method = self.module.eval_method
 
@@ -330,6 +314,7 @@ class BoxSquaredELModel(BoxSquaredEL):
         path_to_dc=None,
         prefix="4932.",
         neg_types=["gci2"],
+        random_neg_fraction=1.0,
     ):
         optimizer = th.optim.Adam(self.module.parameters(), lr=self.learning_rate)
         scheduler = ReduceLROnPlateau(optimizer, patience=patience)
@@ -356,6 +341,7 @@ class BoxSquaredELModel(BoxSquaredEL):
                 path_to_dc=path_to_dc,
                 class_index_dict=self.class_index_dict,
                 object_property_index_dict=self.object_property_index_dict,
+                random_neg_fraction=random_neg_fraction,
             )
         else:
             train_dataloader = OntologyDataLoader(
@@ -373,6 +359,7 @@ class BoxSquaredELModel(BoxSquaredEL):
                 negative_mode="random",
                 class_index_dict=self.class_index_dict,
                 object_property_index_dict=self.object_property_index_dict,
+                random_neg_fraction=random_neg_fraction,
             )
         num_steps = train_dataloader.num_steps
 
@@ -474,12 +461,8 @@ class BoxSquaredELModel(BoxSquaredEL):
             with th.no_grad():
                 self.module.eval()
                 valid_loss = 0
-                if self.test_gci == "gci0":
-                    gci0_data = self.validation_datasets["gci0"][:]
-                    loss = th.mean(self.module(gci0_data, "gci0"))
-                elif self.test_gci == "gci2":
-                    gci2_data = self.validation_datasets["gci2"][:]
-                    loss = th.mean(self.module(gci2_data, "gci2"))
+                gci2_data = self.validation_datasets["gci2"][:]
+                loss = th.mean(self.module(gci2_data, "gci2"))
                 valid_loss += loss.detach().item()
                 scheduler.step(valid_loss)
 
