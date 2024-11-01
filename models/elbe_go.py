@@ -350,8 +350,8 @@ class ELBEModel(ELBE):
                     if "gci0" not in neg_types:
                         l = th.mean(th.square(pos_loss))
                     else:
-                        l = th.mean(pos_loss) + th.mean(
-                            self.module(gci0_neg, "gci0", neg=True)
+                        l = th.mean(th.square(pos_loss)) + th.mean(
+                            th.square(self.module(gci0_neg, "gci0", neg=True))
                         )
                     cur_loss += l
                 if len(gci1) > 0:
@@ -359,8 +359,8 @@ class ELBEModel(ELBE):
                     if "gci1" not in neg_types:
                         l = th.mean(th.square(pos_loss))
                     else:
-                        l = th.mean(pos_loss) + th.mean(
-                            self.module(gci1_neg, "gci1", neg=True)
+                        l = th.mean(th.square(pos_loss)) + th.mean(
+                            th.square(self.module(gci1_neg, "gci1", neg=True))
                         )
                     cur_loss += l
                 if len(gci2) > 0:
@@ -377,8 +377,8 @@ class ELBEModel(ELBE):
                     if "gci3" not in neg_types:
                         l = th.mean(th.square(pos_loss))
                     else:
-                        l = th.mean(pos_loss) + th.mean(
-                            self.module(gci3_neg, "gci3", neg=True)
+                        l = th.mean(th.square(pos_loss)) + th.mean(
+                            th.square(self.module(gci3_neg, "gci3", neg=True))
                         )
                     cur_loss += l
                 if len(gci0_bot) > 0:
@@ -386,8 +386,8 @@ class ELBEModel(ELBE):
                     if "gci0_bot" not in neg_types:
                         l = th.mean(th.square(pos_loss))
                     else:
-                        l = th.mean(pos_loss) + th.mean(
-                            self.module(gci0_bot_neg, "gci0_bot", neg=True)
+                        l = th.mean(th.square(pos_loss)) + th.mean(
+                            th.square(self.module(gci0_bot_neg, "gci0_bot", neg=True))
                         )
                     cur_loss += l
                 if len(gci1_bot) > 0:
@@ -395,8 +395,8 @@ class ELBEModel(ELBE):
                     if "gci1_bot" not in neg_types:
                         l = th.mean(th.square(pos_loss))
                     else:
-                        l = th.mean(pos_loss) + th.mean(
-                            self.module(gci1_bot_neg, "gci1_bot", neg=True)
+                        l = th.mean(th.square(pos_loss)) + th.mean(
+                            th.square(self.module(gci1_bot_neg, "gci1_bot", neg=True))
                         )
                     cur_loss += l
                 if len(gci3_bot) > 0:
@@ -404,8 +404,8 @@ class ELBEModel(ELBE):
                     if "gci3_bot" not in neg_types:
                         l = th.mean(th.square(pos_loss))
                     else:
-                        l = th.mean(pos_loss) + th.mean(
-                            self.module(gci3_bot_neg, "gci3_bot", neg=True)
+                        l = th.mean(th.square(pos_loss)) + th.mean(
+                            th.square(self.module(gci3_bot_neg, "gci3_bot", neg=True))
                         )
                     cur_loss += l
                 train_loss += cur_loss.detach().item()
