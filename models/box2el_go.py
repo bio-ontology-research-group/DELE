@@ -418,8 +418,8 @@ class BoxSquaredELModel(BoxSquaredEL):
                     if "gci3" not in neg_types:
                         l = th.mean(th.square(pos_loss))
                     else:
-                        l = th.mean(pos_loss) + th.mean(
-                            self.module(gci3_neg, "gci3", neg=True)
+                        l = th.mean(th.square(pos_loss)) + th.mean(
+                            th.square(self.module(gci3_neg, "gci3", neg=True))
                         )
                     cur_loss += l
                 if len(gci0_bot) > 0:
@@ -427,8 +427,8 @@ class BoxSquaredELModel(BoxSquaredEL):
                     if "gci0_bot" not in neg_types:
                         l = th.mean(th.square(pos_loss))
                     else:
-                        l = th.mean(pos_loss) + th.mean(
-                            self.module(gci0_bot_neg, "gci0_bot", neg=True)
+                        l = th.mean(th.square(pos_loss)) + th.mean(
+                            th.square(self.module(gci0_bot_neg, "gci0_bot", neg=True))
                         )
                     cur_loss += l
                 if len(gci1_bot) > 0:
@@ -436,7 +436,7 @@ class BoxSquaredELModel(BoxSquaredEL):
                     if "gci1_bot" not in neg_types:
                         l = th.mean(th.square(pos_loss))
                     else:
-                        l = th.mean(pos_loss) + th.mean(
+                        l = th.mean(th.square(pos_loss)) + th.mean(
                             self.module(gci1_bot_neg, "gci1_bot", neg=True)
                         )
                     cur_loss += l
@@ -445,8 +445,8 @@ class BoxSquaredELModel(BoxSquaredEL):
                     if "gci3_bot" not in neg_types:
                         l = th.mean(th.square(pos_loss))
                     else:
-                        l = th.mean(pos_loss) + th.mean(
-                            self.module(gci3_bot_neg, "gci3_bot", neg=True)
+                        l = th.mean(th.square(pos_loss)) + th.mean(
+                            th.square(self.module(gci3_bot_neg, "gci3_bot", neg=True))
                         )
                     cur_loss += l
                 cur_loss += self.module.regularization_loss()
