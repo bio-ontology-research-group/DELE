@@ -314,7 +314,7 @@ class ELBEModel(ELBE):
                 path_to_dc=path_to_dc,
                 class_index_dict=self.class_index_dict,
                 object_property_index_dict=self.object_property_index_dict,
-                random_neg_fraction=1.0,
+                random_neg_fraction=random_neg_fraction,
             )
         else:
             train_dataloader = OntologyDataLoader(
@@ -331,7 +331,7 @@ class ELBEModel(ELBE):
                 negative_mode="random",
                 class_index_dict=self.class_index_dict,
                 object_property_index_dict=self.object_property_index_dict,
-                random_neg_fraction=1.0,
+                random_neg_fraction=random_neg_fraction,
             )
         num_steps = train_dataloader.num_steps
 
