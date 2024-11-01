@@ -404,7 +404,7 @@ class BoxSquaredELModel(BoxSquaredEL):
                         l = th.mean(pos_loss) + th.mean(
                             self.module(gci0_neg, "gci0", neg=True)
                         )
-                    cur_loss += weights[0] * l
+                    cur_loss += l
                 if len(gci1) > 0:
                     pos_loss = self.module(gci1, "gci1")
                     if "gci1" not in neg_types:
@@ -413,7 +413,7 @@ class BoxSquaredELModel(BoxSquaredEL):
                         l = th.mean(pos_loss) + th.mean(
                             self.module(gci1_neg, "gci1", neg=True)
                         )
-                    cur_loss += weights[1] * l
+                    cur_loss += l
                 if len(gci2) > 0:
                     pos_loss = self.module(gci2, "gci2")
                     if "gci2" not in neg_types:
@@ -422,7 +422,7 @@ class BoxSquaredELModel(BoxSquaredEL):
                         l = th.mean(th.square(pos_loss)) + th.mean(
                             th.square(self.module(gci2_neg, "gci2", neg=True))
                         )
-                    cur_loss += weights[2] * l
+                    cur_loss += l
                 if len(gci3) > 0:
                     pos_loss = self.module(gci3, "gci3")
                     if "gci3" not in neg_types:
@@ -431,7 +431,7 @@ class BoxSquaredELModel(BoxSquaredEL):
                         l = th.mean(pos_loss) + th.mean(
                             self.module(gci3_neg, "gci3", neg=True)
                         )
-                    cur_loss += weights[3] * l
+                    cur_loss += l
                 if len(gci0_bot) > 0:
                     pos_loss = self.module(gci0_bot, "gci0_bot")
                     if "gci0_bot" not in neg_types:
@@ -440,7 +440,7 @@ class BoxSquaredELModel(BoxSquaredEL):
                         l = th.mean(pos_loss) + th.mean(
                             self.module(gci0_bot_neg, "gci0_bot", neg=True)
                         )
-                    cur_loss += weights[4] * l
+                    cur_loss += l
                 if len(gci1_bot) > 0:
                     pos_loss = self.module(gci1_bot, "gci1_bot")
                     if "gci1_bot" not in neg_types:
@@ -449,7 +449,7 @@ class BoxSquaredELModel(BoxSquaredEL):
                         l = th.mean(pos_loss) + th.mean(
                             self.module(gci1_bot_neg, "gci1_bot", neg=True)
                         )
-                    cur_loss += weights[5] * l
+                    cur_loss += l
                 if len(gci3_bot) > 0:
                     pos_loss = self.module(gci3_bot, "gci3_bot")
                     if "gci3_bot" not in neg_types:
@@ -458,7 +458,7 @@ class BoxSquaredELModel(BoxSquaredEL):
                         l = th.mean(pos_loss) + th.mean(
                             self.module(gci3_bot_neg, "gci3_bot", neg=True)
                         )
-                    cur_loss += weights[6] * l
+                    cur_loss += l
                 cur_loss += self.module.regularization_loss()
                 train_loss += cur_loss.detach().item()
                 optimizer.zero_grad()
