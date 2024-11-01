@@ -72,7 +72,7 @@ class ELEmModule(ELModule):
         )
 
     def gci0_bot_loss(self, data, neg=False):
-        return gci0_bot_loss(data, self.class_rad, self.loss_type, self.epsilon, neg=neg)
+        return gci0_bot_loss(data, self.class_rad, self.epsilon, neg=neg)
 
     def gci1_loss(self, data, neg=False):
         return gci1_loss(
@@ -117,7 +117,7 @@ class ELEmModule(ELModule):
         )
 
     def gci3_bot_loss(self, data, neg=False):
-        return gci3_bot_loss(data, self.class_rad, self.loss_type, self.epsilon, neg=neg)
+        return gci3_bot_loss(data, self.class_rad, self.epsilon, neg=neg)
 
     def eval_method(self, data):
         return gci2_loss(
