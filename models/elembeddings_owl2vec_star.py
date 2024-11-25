@@ -1,6 +1,6 @@
 import mowl
 
-mowl.init_jvm("8g", "1g", 8)
+mowl.init_jvm("8g")
 
 from mowl.base_models.elmodel import EmbeddingELModel
 from mowl.nn import ELModule
