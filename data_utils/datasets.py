@@ -5,6 +5,9 @@ mowl.init_jvm("8g")
 from mowl.datasets import PathDataset
 from org.semanticweb.owlapi.model import OWLClass
 
+"""
+Helper functions from mOWL library
+"""
 class Entities:
     def __init__(self, collection):
         self._collection = self.check_owl_type(collection)
@@ -90,6 +93,9 @@ class OWLClasses(Entities):
 
 
 class OWLTwoVecStarDataset(PathDataset):
+    """
+    OWL2Vec* dataset class
+    """
     def init(self, args, **kwargs):
         super().init(args, **kwargs)
 
@@ -106,6 +112,9 @@ class OWLTwoVecStarDataset(PathDataset):
         return self._evaluation_classes
 
 class PPIYeastDataset(PathDataset):
+    """
+    Yeast iw (interacts_with) dataset class
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -115,25 +124,6 @@ class PPIYeastDataset(PathDataset):
             proteins = set()
             for owl_name, owl_cls in self.classes.as_dict.items():
                 if "4932." in owl_name:
-                    proteins.add(owl_cls)
-            self._evaluation_classes = OWLClasses(proteins), OWLClasses(proteins)
-
-        return self._evaluation_classes
-
-    def get_evaluation_property(self):
-        return "http://interacts_with"
-
-
-class PPIHumanDataset(PathDataset):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    @property
-    def evaluation_classes(self):
-        if self._evaluation_classes is None:
-            proteins = set()
-            for owl_name, owl_cls in self.classes.as_dict.items():
-                if "9606." in owl_name:
                     proteins.add(owl_cls)
             self._evaluation_classes = OWLClasses(proteins), OWLClasses(proteins)
 
@@ -144,6 +134,9 @@ class PPIHumanDataset(PathDataset):
 
 
 class AFPYeastDataset(PathDataset):
+    """
+    Yeast hf (has_function) dataset class
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -154,31 +147,6 @@ class AFPYeastDataset(PathDataset):
             gos = set()
             for owl_name, owl_cls in self.classes.as_dict.items():
                 if "4932." in owl_name:
-                    proteins.add(owl_cls)
-                else:
-                    if "label" not in owl_name and "hing" not in owl_name:
-                        gos.add(owl_cls)
-            self._evaluation_classes = OWLClasses(proteins), OWLClasses(gos)
-
-        return self._evaluation_classes
-
-    def get_evaluation_property(self):
-        return "http://has_function"
-
-
-class AFPHumanDataset(PathDataset):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    @property
-    def evaluation_classes(self):
-        """Classes that are used in evaluation"""
-
-        if self._evaluation_classes is None:
-            proteins = set()
-            gos = set()
-            for owl_name, owl_cls in self.classes.as_dict.items():
-                if "9606." in owl_name:
                     proteins.add(owl_cls)
                 else:
                     if "label" not in owl_name and "hing" not in owl_name:

@@ -6,6 +6,40 @@ from mowl.datasets.el import ELDataset
 import numpy_indexed as npi
 
 class OntologyDataLoader:
+    """
+    Custom OWL2Vec* dataloader
+
+    :param gci0: a set of axioms of type `C \sqsubseteq D`
+    :type gci0: torch.Tensor(torch.int64)
+    :param gci1: a set of axioms of type `C \sqcap D \sqsubseteq E`
+    :type gci1: torch.Tensor(torch.int64)
+    :param gci2: a set of axioms of type `C \sqsubseteq \exists R.D`
+    :type gci2: torch.Tensor(torch.int64)
+    :param gci3: a set of axioms of type `\exists R.C \sqsubseteq D`
+    :type gci3: torch.Tensor(torch.int64)
+    :param gci0_bot: a set of axioms of type `C \sqsubseteq \bot`
+    :type gci0_bot: torch.Tensor(torch.int64)
+    :param gci1_bot: a set of axioms of type `C \sqcap D \sqsubseteq \bot`
+    :type gci1_bot: torch.Tensor(torch.int64)
+    :param gci3_bot: a set of axioms of type `\exists R.C \sqsubseteq \bot`
+    :type gci3_bot: torch.Tensor(torch.int64)
+    :param batch_size: batch size
+    :type batch_size: int
+    :param device: device name, e.g. `cuda`, `cpu`
+    :type device: str
+    :param evaluation_classes: class indices
+    :type evaluation_classes: numpy.array(numpy.int64)
+    :param negative_mode: negative sampling strategy, `random` for random sampling, `filtered` for filtering using deductive closure
+    :type negative_mode: str
+    :param path_to_dc: filepath to the deductive closure ontology
+    :type path_to_dc: str
+    :param class_index_dict: dictionary of classes and their embeddings
+    :type class_index_dict: dict(str, numpy.array)
+    :param object_property_index_dict: dictionary of relations and their embeddings
+    :type object_property_index_dict: dict(str, numpy.array)
+    :param random_neg_fraction: the fraction of random negatives (the rest negatives are sampled from the deductive closure), should be between 0 and 1
+    :type random_neg_fraction: float/int
+    """
     def __init__(
         self,
         gci0,

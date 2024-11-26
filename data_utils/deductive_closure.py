@@ -20,7 +20,9 @@ def precompute_gci0_dc(data_path, ontology_file):
     """
     Compute GCI0 (`C \sqsubseteq D`) deductive closure
 
-    :param data_path: absolute filepath to the folder containing train ontology
+    :param data_path: absolute filepath to the folder containing the ontology of interest
+    :type data_path: str
+    :param ontology_file: ontology filename
     :type data_path: str
     """
 
@@ -138,7 +140,9 @@ def precompute_gci1_dc_1(data_path, ontology_file):
     """
     Compute GCI1 (`C \sqcap D \sqsubseteq E`) deductive closure
 
-    :param data_path: absolute filepath to the folder containing train ontology
+    :param data_path: absolute filepath to the folder containing the ontology of interest
+    :type data_path: str
+    :param ontology_file: ontology filename
     :type data_path: str
     """
 
@@ -219,9 +223,11 @@ def precompute_gci1_dc_1(data_path, ontology_file):
 
 def precompute_gci1_dc_2(data_path, ontology_file):
     """
-    Compute GCI1 (`C \sqcap D \sqsubseteq E`) deductive closure
+    Compute GCI1 (`C \sqcap D \sqsubseteq E`) deductive closure, additional rules
 
-    :param data_path: absolute filepath to the folder containing train ontology
+    :param data_path: absolute filepath to the folder containing the ontology of interest
+    :type data_path: str
+    :param ontology_file: ontology filename
     :type data_path: str
     """
 
@@ -366,7 +372,9 @@ def precompute_gci2_dc(data_path, ontology_file):
     """
     Compute GCI2 (`C \sqsubseteq \exists R.D`) deductive closure
 
-    :param data_path: absolute filepath to the folder containing train ontology
+    :param data_path: absolute filepath to the folder containing the ontology of interest
+    :type data_path: str
+    :param ontology_file: ontology filename
     :type data_path: str
     """
 
@@ -454,7 +462,9 @@ def precompute_gci3_dc(data_path, ontology_file):
     """
     Compute GCI3 (`\exists R.C \sqsubseteq D`) deductive closure
 
-    :param data_path: absolute filepath to the folder containing train ontology
+    :param data_path: absolute filepath to the folder containing the ontology of interest
+    :type data_path: str
+    :param ontology_file: ontology filename
     :type data_path: str
     """
 
@@ -522,7 +532,9 @@ def precompute_gci1_bot_dc(data_path, ontology_file):
     """
     Compute GCI1_BOT (`C \sqcap D \sqsubseteq \bot`) deductive closure
 
-    :param data_path: absolute filepath to the folder containing train ontology
+    :param data_path: absolute filepath to the folder containing the ontology of interest
+    :type data_path: str
+    :param ontology_file: ontology filename
     :type data_path: str
     """
 
