@@ -10,6 +10,24 @@ def gci0_loss(
     epsilon,
     neg=False,
 ):
+    """
+    Compute GCI0 (`C \sqsubseteq D`) loss
+
+    :param data: GCI0 data
+    :type data: torch.Tensor(torch.int64)
+    :param class_embed: class centers' embeddings
+    :type class_embed: torch.nn.modules.sparse.Embedding
+    :param class_offset: class offsets' embeddings
+    :type class_offset: torch.nn.modules.sparse.Embedding
+    :param margin: margin parameter \gamma
+    :type margin: float/int
+    :param epsilon: $\varepsilon$ parameter for negative loss computation
+    :type epsilon: float
+    :param neg: whether to compute negative or positive loss
+    :type neg: bool
+    :return: loss value for each data sample
+    :return type: torch.Tensor(torch.float64)
+    """
     if neg:
         return gci1_bot_loss(
             data,
@@ -38,6 +56,20 @@ def gci0_loss(
 def gci0_bot_loss(
     data, class_offset, epsilon, neg=False
 ):
+    """
+    Compute GCI0_BOT (`C \sqsubseteq \bot`) loss
+
+    :param data: GCI0_BOT data
+    :type data: torch.Tensor(torch.int64)
+    :param class_offset: class offsets' embeddings
+    :type class_offset: torch.nn.modules.sparse.Embedding
+    :param epsilon: $\varepsilon$ parameter for negative loss computation
+    :type epsilon: float
+    :param neg: whether to compute negative or positive loss
+    :type neg: bool
+    :return: loss value for each data sample
+    :return type: torch.Tensor(torch.float64)
+    """
     if neg:
         return gci0_bot_loss_neg(
             data, class_offset, epsilon
@@ -53,6 +85,18 @@ def gci0_bot_loss_neg(
     class_offset,
     epsilon,
 ):
+    """
+    Compute GCI0_BOT (`C \sqsubseteq \bot`) negative loss
+
+    :param data: GCI0_BOT negative data
+    :type data: torch.Tensor(torch.int64)
+    :param class_offset: class offsets' embeddings
+    :type class_offset: torch.nn.modules.sparse.Embedding
+    :param epsilon: $\varepsilon$ parameter for negative loss computation
+    :type epsilon: float
+    :return: loss value for each data sample
+    :return type: torch.Tensor(torch.float64)
+    """
     off_c = th.abs(class_offset(data[:, 0]))
     loss = th.reshape(relu(epsilon - th.linalg.norm(off_c, axis=1)), [-1, 1])
     return loss
@@ -65,6 +109,22 @@ def gci1_loss(
     margin,
     neg=False,
 ):
+    """
+    Compute GCI1 (`C \sqcap D \sqsubseteq E`) loss
+
+    :param data: GCI1 data
+    :type data: torch.Tensor(torch.int64)
+    :param class_embed: class centers' embeddings
+    :type class_embed: torch.nn.modules.sparse.Embedding
+    :param class_offset: class offsets' embeddings
+    :type class_offset: torch.nn.modules.sparse.Embedding
+    :param margin: margin parameter \gamma
+    :type margin: float/int
+    :param neg: whether to compute negative or positive loss
+    :type neg: bool
+    :return: loss value for each data sample
+    :return type: torch.Tensor(torch.float64)
+    """
     if neg:
         return gci1_loss_neg(
             data,
@@ -103,6 +163,20 @@ def gci1_loss_neg(
     class_offset,
     margin,
 ):
+    """
+    Compute GCI1 (`C \sqcap D \sqsubseteq E`) negative loss
+
+    :param data: GCI1 negative data
+    :type data: torch.Tensor(torch.int64)
+    :param class_embed: class centers' embeddings
+    :type class_embed: torch.nn.modules.sparse.Embedding
+    :param class_offset: class offsets' embeddings
+    :type class_offset: torch.nn.modules.sparse.Embedding
+    :param margin: margin parameter \gamma
+    :type margin: float/int
+    :return: loss value for each data sample
+    :return type: torch.Tensor(torch.float64)
+    """
     c = class_embed(data[:, 0])
     d = class_embed(data[:, 1])
     e = class_embed(data[:, 2])
@@ -135,6 +209,24 @@ def gci1_bot_loss(
     epsilon,
     neg=False,
 ):
+    """
+    Compute GCI1_BOT (`C \sqcap D \sqsubseteq \bot`) loss
+
+    :param data: GCI1_BOT data
+    :type data: torch.Tensor(torch.int64)
+    :param class_embed: class centers' embeddings
+    :type class_embed: torch.nn.modules.sparse.Embedding
+    :param class_offset: class offsets' embeddings
+    :type class_offset: torch.nn.modules.sparse.Embedding
+    :param margin: margin parameter \gamma
+    :type margin: float/int
+    :param epsilon: $\varepsilon$ parameter for negative loss computation
+    :type epsilon: float
+    :param neg: whether to compute negative or positive loss
+    :type neg: bool
+    :return: loss value for each data sample
+    :return type: torch.Tensor(torch.float64)
+    """
     if neg:
         return gci1_bot_loss_neg(
             data,
@@ -164,6 +256,22 @@ def gci1_bot_loss_neg(
     margin,
     epsilon,
 ):
+    """
+    Compute GCI1_BOT (`C \sqcap D \sqsubseteq \bot`) negative loss
+
+    :param data: GCI1_BOT negative data
+    :type data: torch.Tensor(torch.int64)
+    :param class_embed: class centers' embeddings
+    :type class_embed: torch.nn.modules.sparse.Embedding
+    :param class_offset: class offsets' embeddings
+    :type class_offset: torch.nn.modules.sparse.Embedding
+    :param margin: margin parameter \gamma
+    :type margin: float/int
+    :param epsilon: $\varepsilon$ parameter for negative loss computation
+    :type epsilon: float
+    :return: loss value for each data sample
+    :return type: torch.Tensor(torch.float64)
+    """
     c = class_embed(data[:, 0])
     d = class_embed(data[:, 1])
 
@@ -187,6 +295,24 @@ def gci2_loss(
     margin,
     neg=False,
 ):
+    """
+    Compute GCI2 (`C \sqsubseteq \exists R.D`) loss
+
+    :param data: GCI2 data
+    :type data: torch.Tensor(torch.int64)
+    :param class_embed: class centers' embeddings
+    :type class_embed: torch.nn.modules.sparse.Embedding
+    :param class_offset: class offsets' embeddings
+    :type class_offset: torch.nn.modules.sparse.Embedding
+    :param rel_embed: relations' embeddings
+    :type rel_embed: torch.nn.modules.sparse.Embedding
+    :param margin: margin parameter \gamma
+    :type margin: float/int
+    :param neg: whether to compute negative or positive loss
+    :type neg: bool
+    :return: loss value for each data sample
+    :return type: torch.Tensor(torch.float64)
+    """
     if neg:
         return gci2_loss_neg(
             data,
@@ -218,6 +344,22 @@ def gci2_loss_neg(
     rel_embed,
     margin,
 ):
+    """
+    Compute GCI2 (`C \sqsubseteq \exists R.D`) negative loss
+
+    :param data: GCI2 negative data
+    :type data: torch.Tensor(torch.int64)
+    :param class_embed: class centers' embeddings
+    :type class_embed: torch.nn.modules.sparse.Embedding
+    :param class_offset: class offsets' embeddings
+    :type class_offset: torch.nn.modules.sparse.Embedding
+    :param rel_embed: relations' embeddings
+    :type rel_embed: torch.nn.modules.sparse.Embedding
+    :param margin: margin parameter \gamma
+    :type margin: float/int
+    :return: loss value for each data sample
+    :return type: torch.Tensor(torch.float64)
+    """
     c = class_embed(data[:, 0])
     r = rel_embed(data[:, 1])
     d = class_embed(data[:, 2])
@@ -240,6 +382,24 @@ def gci3_loss(
     margin,
     neg=False,
 ):
+    """
+    Compute GCI3 (`\exists R.C \sqsubseteq D`) loss
+
+    :param data: GCI3 data
+    :type data: torch.Tensor(torch.int64)
+    :param class_embed: class centers' embeddings
+    :type class_embed: torch.nn.modules.sparse.Embedding
+    :param class_offset: class offsets' embeddings
+    :type class_offset: torch.nn.modules.sparse.Embedding
+    :param rel_embed: relations' embeddings
+    :type rel_embed: torch.nn.modules.sparse.Embedding
+    :param margin: margin parameter \gamma
+    :type margin: float/int
+    :param neg: whether to compute negative or positive loss
+    :type neg: bool
+    :return: loss value for each data sample
+    :return type: torch.Tensor(torch.float64)
+    """
     if neg:
         return gci3_loss_neg(
             data,
@@ -271,6 +431,22 @@ def gci3_loss_neg(
     rel_embed,
     margin,
 ):
+    """
+    Compute GCI3 (`\exists R.C \sqsubseteq D`) negative loss
+
+    :param data: GCI3 negative data
+    :type data: torch.Tensor(torch.int64)
+    :param class_embed: class centers' embeddings
+    :type class_embed: torch.nn.modules.sparse.Embedding
+    :param class_offset: class offsets' embeddings
+    :type class_offset: torch.nn.modules.sparse.Embedding
+    :param rel_embed: relations' embeddings
+    :type rel_embed: torch.nn.modules.sparse.Embedding
+    :param margin: margin parameter \gamma
+    :type margin: float/int
+    :return: loss value for each data sample
+    :return type: torch.Tensor(torch.float64)
+    """
     r = rel_embed(data[:, 0])
     c = class_embed(data[:, 1])
     d = class_embed(data[:, 2])
@@ -288,6 +464,20 @@ def gci3_loss_neg(
 def gci3_bot_loss(
     data, class_offset, epsilon, neg=False
 ):
+    """
+    Compute GCI3_BOT (`\exists R.C \sqsubseteq \bot`) loss
+
+    :param data: GCI3_BOT data
+    :type data: torch.Tensor(torch.int64)
+    :param class_offset: class offsets' embeddings
+    :type class_offset: torch.nn.modules.sparse.Embedding
+    :param epsilon: $\varepsilon$ parameter for negative loss computation
+    :type epsilon: float
+    :param neg: whether to compute negative or positive loss
+    :type neg: bool
+    :return: loss value for each data sample
+    :return type: torch.Tensor(torch.float64)
+    """
     if neg:
         return gci3_bot_loss_neg(
             data, class_offset, epsilon
@@ -299,6 +489,18 @@ def gci3_bot_loss(
 
 
 def gci3_bot_loss_neg(data, class_offset, epsilon):
+    """
+    Compute GCI3_BOT (`\exists R.C \sqsubseteq \bot`) loss
+
+    :param data: GCI3_BOT data
+    :type data: torch.Tensor(torch.int64)
+    :param class_offset: class offsets' embeddings
+    :type class_offset: torch.nn.modules.sparse.Embedding
+    :param epsilon: $\varepsilon$ parameter for negative loss computation
+    :type epsilon: float
+    :return: loss value for each data sample
+    :return type: torch.Tensor(torch.float64)
+    """
     off_c = th.abs(class_offset(data[:, 1]))
     loss = th.reshape(relu(epsilon - th.linalg.norm(off_c, axis=1)), [-1, 1])
     return loss
