@@ -160,7 +160,7 @@ class ELEmModule(ELModule):
             neg=neg,
         )
 
-    def gci2_loss(self, data, neg=False, idxs_for_negs=None):
+    def gci2_loss(self, data, neg=False):
         """
         Compute GCI2 (`C \sqsubseteq \exists R.D`) loss
 
@@ -283,6 +283,8 @@ class ELEmbeddings(EmbeddingELModel):
         :type model_filepath: str
         :param device: device to use, e.g., `cpu`, `cuda`
         :type device: str
+        :param test_gci: GCI test type (`gci0` or `gci2`)
+        :type test_gci: str
         :param eval_property: evaluation property
         :type eval_property: str
         :param path_to_dc: path to the deductive closure, need to provide if metrics are filtered with respect to the deductive closure
