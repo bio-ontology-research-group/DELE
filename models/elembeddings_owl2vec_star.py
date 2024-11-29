@@ -476,8 +476,6 @@ class ELEmModel(ELEmbeddings):
         :type epochs_no_improve: int
         :param path_to_dc: absolute path to deductive closure ontology, need to provide if filtered negative sampling strategy is chosen or random_neg_fraction is less than 1
         :type path_to_dc: str
-        :param prefix: protein prefix, need to provide for separating GO functions and proteins
-        :type prefix: str
         :param neg_types: abbreviations of GCIs to use for negative sampling (`gci0`, `gci1`, `gci2`, `gci3`, `gci0_bot`, `gci1_bot`, `gci3_bot`)
         :type neg_types: list(str)
         :param random_neg_fraction: the fraction of random negatives (the rest negatives are sampled from the deductive closure), should be between 0 and 1

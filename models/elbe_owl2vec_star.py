@@ -25,6 +25,22 @@ class ELBEModule(ELModule):
         epsilon=0.001,
         test_gci="gci2",
     ):
+        """
+        ELBE module
+
+        :param nb_ont_classes: total number of classes
+        :type nb_ont_classes: int
+        :param nb_rels: total number of relations
+        :type nb_rels: int
+        :param embed_dim: embedding dimension
+        :type embed_dim: int
+        :param margin: margin parameter \gamma
+        :type margin: float/int
+        :param epsilon: $\varepsilon$ parameter for negative loss computation
+        :type epsilon: float
+        :param test_gci: GCI test type (`gci0` or `gci2`)
+        :type test_gci: str
+        """
         super().__init__()
         self.nb_ont_classes = nb_ont_classes
         self.nb_rels = nb_rels
@@ -54,6 +70,16 @@ class ELBEModule(ELModule):
         self.test_gci = test_gci
 
     def gci0_loss(self, data, neg=False):
+        """
+        Compute GCI0 (`C \sqsubseteq D`) loss
+
+        :param data: GCI0 data
+        :type data: torch.Tensor(torch.int64)
+        :param neg: whether to compute negative or positive loss
+        :type neg: bool
+        :return: loss value for each data sample
+        :return type: torch.Tensor(torch.float64)
+        """
         return gci0_loss(
             data,
             self.class_embed,
@@ -64,6 +90,16 @@ class ELBEModule(ELModule):
         )
 
     def gci0_bot_loss(self, data, neg=False):
+        """
+        Compute GCI0_BOT (`C \sqsubseteq \bot`) loss
+
+        :param data: GCI0_BOT data
+        :type data: torch.Tensor(torch.int64)
+        :param neg: whether to compute negative or positive loss
+        :type neg: bool
+        :return: loss value for each data sample
+        :return type: torch.Tensor(torch.float64)
+        """
         return gci0_bot_loss(
             data,
             self.class_offset,
@@ -72,6 +108,16 @@ class ELBEModule(ELModule):
         )
 
     def gci1_loss(self, data, neg=False):
+        """
+        Compute GCI1 (`C \sqcap D \sqsubseteq E`) loss
+
+        :param data: GCI1 data
+        :type data: torch.Tensor(torch.int64)
+        :param neg: whether to compute negative or positive loss
+        :type neg: bool
+        :return: loss value for each data sample
+        :return type: torch.Tensor(torch.float64)
+        """
         return gci1_loss(
             data,
             self.class_embed,
@@ -81,6 +127,16 @@ class ELBEModule(ELModule):
         )
 
     def gci1_bot_loss(self, data, neg=False):
+        """
+        Compute GCI1_BOT (`C \sqcap D \sqsubseteq \bot`) loss
+
+        :param data: GCI1_BOT data
+        :type data: torch.Tensor(torch.int64)
+        :param neg: whether to compute negative or positive loss
+        :type neg: bool
+        :return: loss value for each data sample
+        :return type: torch.Tensor(torch.float64)
+        """
         return gci1_bot_loss(
             data,
             self.class_embed,
@@ -90,7 +146,17 @@ class ELBEModule(ELModule):
             neg=neg,
         )
 
-    def gci2_loss(self, data, neg=False, idxs_for_negs=None):
+    def gci2_loss(self, data, neg=False):
+        """
+        Compute GCI2 (`C \sqsubseteq \exists R.D`) loss
+
+        :param data: GCI2 data
+        :type data: torch.Tensor(torch.int64)
+        :param neg: whether to compute negative or positive loss
+        :type neg: bool
+        :return: loss value for each data sample
+        :return type: torch.Tensor(torch.float64)
+        """
         return gci2_loss(
             data,
             self.class_embed,
@@ -101,6 +167,16 @@ class ELBEModule(ELModule):
         )
 
     def gci3_loss(self, data, neg=False):
+        """
+        Compute GCI3 (`\exists R.C \sqsubseteq D`) loss
+
+        :param data: GCI3 data
+        :type data: torch.Tensor(torch.int64)
+        :param neg: whether to compute negative or positive loss
+        :type neg: bool
+        :return: loss value for each data sample
+        :return type: torch.Tensor(torch.float64)
+        """
         return gci3_loss(
             data,
             self.class_embed,
@@ -111,6 +187,16 @@ class ELBEModule(ELModule):
         )
 
     def gci3_bot_loss(self, data, neg=False):
+        """
+        Compute GCI3_BOT (`\exists R.C \sqsubseteq \bot`) loss
+
+        :param data: GCI3_BOT data
+        :type data: torch.Tensor(torch.int64)
+        :param neg: whether to compute negative or positive loss
+        :type neg: bool
+        :return: loss value for each data sample
+        :return type: torch.Tensor(torch.float64)
+        """
         return gci3_bot_loss(
             data,
             self.class_offset,
@@ -119,6 +205,14 @@ class ELBEModule(ELModule):
         )
 
     def eval_method(self, data):
+        """
+        Compute evaluation score (for GCI2 `C \sqsubseteq \exists R.D` or GCI0 `C \sqsubseteq D` axioms)
+
+        :param data: evaluation data
+        :type data: torch.Tensor(torch.int64)
+        :return: evaluation score value for each data sample
+        :return type: torch.Tensor(torch.float64)
+        """
         if self.test_gci == "gci0":
             return gci0_loss(
                 data,
@@ -156,6 +250,36 @@ class ELBE(EmbeddingELModel):
         path_to_dc=None,
         path_to_test=None,
     ):
+        """
+        ELBE model
+
+        :param dataset: dataset to use
+        :type dataset: data_utils.data.PPIYeastDataset/data_utils.data.AFPYeastDataset
+        :param embed_dim: embedding dimension
+        :type embed_dim: int
+        :param margin: margin parameter \gamma
+        :type margin: float/int
+        :param epsilon: $\varepsilon$ parameter for negative loss computation
+        :type epsilon: float
+        :param learning_rate: learning rate
+        :type learning_rate: float
+        :param epochs: number of training epochs 
+        :type epochs: int
+        :param batch_size: batch size
+        :type batch_size: int
+        :param model_filepath: path to model checkpoint
+        :type model_filepath: str
+        :param device: device to use, e.g., `cpu`, `cuda`
+        :type device: str
+        :param test_gci: GCI test type (`gci0` or `gci2`)
+        :type test_gci: str
+        :param eval_property: evaluation property
+        :type eval_property: str
+        :param path_to_dc: path to the deductive closure, need to provide if metrics are filtered with respect to the deductive closure
+        :type path_to_dc: str
+        :param path_to_test: path to the test (if differs from the default test set)
+        :type path_to_test: str
+        """
         super().__init__(
             dataset, embed_dim, batch_size, extended=True, model_filepath=model_filepath
         )
@@ -183,6 +307,9 @@ class ELBE(EmbeddingELModel):
         self.init_model()
 
     def init_model(self):
+        """
+        Load ELBE module
+        """
         self.module = ELBEModule(
             len(self.class_index_dict),
             len(self.object_property_index_dict),
@@ -194,6 +321,9 @@ class ELBE(EmbeddingELModel):
         self.eval_method = self.module.eval_method
 
     def load_eval_data(self):
+        """
+        Load evaluation data
+        """
         if self._loaded_eval:
             return
 
@@ -221,6 +351,14 @@ class ELBE(EmbeddingELModel):
         self._loaded_eval = True
 
     def get_embeddings(self):
+        """
+        Get embeddings of relations and classes from the model checkpoint
+
+        :return ent_embeds: dictionary class_name: its embedding
+        :type ent_embeds: dict(str, numpy.array(numpy.float64))
+        :return rel_embeds: dictionary relation_name: its embedding
+        :type rel_embeds: dict(str, numpy.array(numpy.float64))
+        """
         self.init_model()
 
         print("Load the best model", self.model_filepath)
@@ -243,37 +381,58 @@ class ELBE(EmbeddingELModel):
         return ent_embeds, rel_embeds
 
     def load_best_model(self):
+        """
+        Load the model from the checkpoint
+        """
         self.init_model()
         self.module.load_state_dict(th.load(self.model_filepath))
         self.module.eval()
 
     @property
     def new_test_set(self):
+        """
+        Get a set of triples that are true positives from the new test dataset
+        """
         self.load_eval_data()
         return self._new_test_set
 
     @property
     def dc_set(self):
+        """
+        Get a set of triples that are true positives from the deductive closure dataset
+        """
         self.load_eval_data()
         return self._dc_set
 
     @property
     def training_set(self):
+        """
+        Get a set of triples that are true positives from the train dataset
+        """
         self.load_eval_data()
         return self._training_set
 
     @property
     def testing_set(self):
+        """
+        Get a set of triples that are true positives from the test dataset
+        """
         self.load_eval_data()
         return self._testing_set
 
     @property
     def head_entities(self):
+        """
+        Get a set of head entities `h` from triples `(h, r, t)`
+        """
         self.load_eval_data()
         return self._head_entities
 
     @property
     def tail_entities(self):
+        """
+        Get a set of tail entities `t` from triples `(h, r, t)`
+        """
         self.load_eval_data()
         return self._tail_entities
 
@@ -282,6 +441,9 @@ class ELBE(EmbeddingELModel):
 
 
 class ELBEModel(ELBE):
+    """
+    Final ELBE model for OWL2Vec* data
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
     
@@ -293,6 +455,20 @@ class ELBEModel(ELBE):
         neg_types=["gci2"],
         random_neg_fraction=1.0,
     ):
+        """
+        Model training
+
+        :param patience: patience parameter for the scheduler
+        :type patience: int
+        :param epochs_no_improve: for how many epochs validation loss doesn't improve
+        :type epochs_no_improve: int
+        :param path_to_dc: absolute path to deductive closure ontology, need to provide if filtered negative sampling strategy is chosen or random_neg_fraction is less than 1
+        :type path_to_dc: str
+        :param neg_types: abbreviations of GCIs to use for negative sampling (`gci0`, `gci1`, `gci2`, `gci3`, `gci0_bot`, `gci1_bot`, `gci3_bot`)
+        :type neg_types: list(str)
+        :param random_neg_fraction: the fraction of random negatives (the rest negatives are sampled from the deductive closure), should be between 0 and 1
+        :type random_neg_fraction: float/int
+        """
         optimizer = th.optim.Adam(self.module.parameters(), lr=self.learning_rate)
         scheduler = ReduceLROnPlateau(optimizer, patience=patience)
         no_improve = 0
@@ -454,4 +630,10 @@ class ELBEModel(ELBE):
                 break
 
     def eval_method(self, data):
+        """
+        Evaluation method
+
+        :param data: data for evaluation
+        :type data: torch.Tensor(torch.int64)
+        """
         return self.module.eval_method(data)

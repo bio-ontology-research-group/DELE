@@ -290,7 +290,7 @@ class ELBE(EmbeddingELModel):
 
     def init_model(self):
         """
-        Load ELEmbeddings module
+        Load ELBE module
         """
         self.module = ELBEModule(
             len(self.class_index_dict),
